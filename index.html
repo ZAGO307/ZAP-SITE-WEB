@@ -4,8 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAP | Batteries Imprimées en 3D</title>
+    
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* --- CHARTE GRAPHIQUE ZAP 3D --- */
+        :root {
+            --jaune-zap: #FFC400;
+            --noir-fond: #121212;
+            --gris-pro: #1e1e1e;
+            --blanc: #ffffff;
+            --gris-texte: #aaaaaa;
+        }
+
+        body {
+            background-color: var(--noir-fond);
+            background-image: radial-gradient(circle at 50% 0%, #2a2a2a 0%, var(--noir-fond) 70%);
+            color: var(--blanc);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background-color: rgba(18, 18, 18, 0.95);
+            border-bottom: 2px solid var(--jaune-zap);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-logo {
+            font-family: 'Arial Black', sans-serif;
+            font-size: 26px;
+            color: var(--jaune-zap);
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        .nav-links a {
+            color: var(--blanc);
+            text-decoration: none;
+            margin-left: 25px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: var(--jaune-zap); }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .tag-local {
+            background: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid var(--jaune-zap);
+        }
+        .hero h1 {
+            font-size: 50px;
+            font-family: 'Arial Black', sans-serif;
+            margin: 20px 0;
+            text-transform: uppercase;
+        }
+        .hero p {
+            font-size: 18px;
+            color: var(--gris-texte);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- ARGUMENTS --- */
+        .grid-arguments {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 50px 10%;
+        }
+        .arg-card {
+            background: var(--gris-pro);
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid var(--jaune-zap);
+            transition: 0.3s;
+        }
+        .arg-card:hover { transform: translateY(-10px); }
+        .arg-icone { font-size: 40px; display: block; margin-bottom: 15px; }
+
+        /* --- ATELIER / CONFIGURATEUR --- */
+        .atelier-section {
+            padding: 80px 5%;
+            background: #181818;
+        }
+        .configurateur {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 50px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .preview-3d img {
+            max-width: 400px;
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 196, 0, 0.2);
+        }
+        .options-form {
+            flex: 1;
+            min-width: 300px;
+            text-align: left;
+            background: var(--gris-pro);
+            padding: 30px;
+            border-radius: 20px;
+        }
+
+        /* --- PASTILLES COULEURS --- */
+        .choix-couleurs { display: flex; gap: 10px; margin: 15px 0 30px; }
+        .pastille {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: 0.2s;
+        }
+        .pastille.active { border-color: white; transform: scale(1.1); }
+        .c-jaune { background: #FFC400; }
+        .c-noir { background: #000; }
+        .c-blanc { background: #fff; }
+        .c-gris { background: #555; }
+        .c-rouge { background: #f00; }
+        .c-bleu { background: #00f; }
+
+        /* --- BOUTONS --- */
+        .btn-action {
+            background-color: var(--jaune-zap);
+            color: black;
+            padding: 18px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .btn-action:hover { background-color: white; transform: scale(1.02); }
+
+        /* --- FORMULAIRE --- */
+        label { display: block; margin-bottom: 10px; font-weight: bold; }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            background: #333;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+        }
+
+        footer {
+            padding: 50px;
+            text-align: center;
+            border-top: 1px solid #333;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 35px; }
+            .nav-links { display: none; }
+        }
+    </style>
 </head>
 <body>
 
@@ -20,10 +198,9 @@
 
     <div class="hero">
         <span class="tag-local">📍 Fabriqué Localement</span>
-        <br><br>
         <h1>L'énergie <span style="color:#FFC400">sur mesure</span>.</h1>
         <p>Batteries portables haute performance avec coque imprimée en 3D. <br>Design robuste, texture grip unique et 100% réparable.</p>
-        <a href="#atelier" class="btn-action" style="width:auto; text-decoration:none; display:inline-block;">Créer ma ZAP</a>
+        <a href="#atelier" class="btn-action" style="width:auto; text-decoration:none;">Créer ma ZAP</a>
     </div>
 
     <div class="grid-arguments" id="concept">
@@ -52,7 +229,7 @@
 
         <div class="configurateur">
             <div class="preview-3d">
-                <img id="image-produit" src="batterie-jaune.jpg" alt="Aperçu Batterie 3D">
+                <img id="image-produit" src="https://via.placeholder.com/400x400/FFC400/000000?text=ZAP+JAUNE" alt="Aperçu Batterie 3D">
             </div>
 
             <form class="options-form">
@@ -60,25 +237,23 @@
                 
                 <label>1. Couleur du Filament</label>
                 <div class="choix-couleurs">
-                    <div class="pastille c-jaune active" data-image="batterie-jaune.jpg" title="Jaune ZAP"></div>
-                    <div class="pastille c-noir"  data-image="batterie-noir.jpg" title="Noir Carbone"></div>
-                    <div class="pastille c-blanc" data-image="batterie-blanc.jpg" title="Blanc Neige"></div>
-                    <div class="pastille c-gris"  data-image="batterie-gris.jpg" title="Gris Indus"></div>
-                    <div class="pastille c-rouge" data-image="batterie-rouge.jpg" title="Rouge Vif"></div>
-                    <div class="pastille c-bleu"  data-image="batterie-bleu.jpg" title="Bleu Bambu"></div>
+                    <div class="pastille c-jaune active" data-color="Jaune ZAP"></div>
+                    <div class="pastille c-noir"  data-color="Noir Carbone"></div>
+                    <div class="pastille c-blanc" data-color="Blanc Neige"></div>
+                    <div class="pastille c-gris"  data-color="Gris Indus"></div>
+                    <div class="pastille c-rouge" data-color="Rouge Vif"></div>
+                    <div class="pastille c-bleu"  data-color="Bleu Bambu"></div>
                 </div>
 
                 <label>2. Modèle de puissance</label>
-                <select id="select-puissance">
+                <select id="puissance">
                     <option value="Pocket">ZAP Pocket (10,000 mAh) - 29€</option>
                     <option value="Explorer">ZAP Explorer (20,000 mAh) - 49€</option>
                 </select>
 
-                <label>3. Gravure Personnalisée (Optionnel +5€)</label>
-                <input type="text" id="input-gravure" placeholder="Ex: Lucas, Proj. X, ZAP-01...">
+                <label>3. Gravure Personnalisée</label>
+                <input type="text" id="gravure" placeholder="Ex: Lucas, Proj. X...">
 
-                <div style="border-top:1px solid #444; margin: 20px 0;"></div>
-                
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                     <span style="font-size:20px; font-weight:bold;">Total estimé:</span>
                     <span style="font-size:24px; color:#FFC400; font-weight:bold;">29.00 €</span>
@@ -87,34 +262,28 @@
                 <button type="button" class="btn-action" onclick="lancerImpression()">
                     Lancer l'impression
                 </button>
-                <div id="status" style="margin-top:10px; font-size:12px; color:#777;">Prêt à commander</div>
+                <p id="status" style="font-size:12px; color: #888; margin-top:10px;">En attente de connexion...</p>
             </form>
         </div>
     </div>
 
     <footer id="contact">
-        &copy; 2026 ZAP 3D. Conception & Impression locale.<br>
-        <a href="mailto:atelier@zap.com" style="color:#777;">Nous contacter pour du B2B</a>
+        &copy; 2026 ZAP 3D. Conception & Impression locale.
     </footer>
 
     <script>
-        // --- LOGIQUE D'AFFICHAGE ---
+        // LOGIQUE DES COULEURS
         const pastilles = document.querySelectorAll('.pastille');
-        const imageProduit = document.getElementById('image-produit');
-
-        pastilles.forEach(pastille => {
-            pastille.addEventListener('click', function() {
-                pastilles.forEach(p => p.classList.remove('active'));
+        pastilles.forEach(p => {
+            p.addEventListener('click', function() {
+                pastilles.forEach(past => past.classList.remove('active'));
                 this.classList.add('active');
-                const nouvelleImage = this.getAttribute('data-image');
-                if(nouvelleImage) { imageProduit.src = nouvelleImage; }
             });
         });
 
-        // --- LOGIQUE MQTT (ESP32) ---
-        // Connexion au broker shiftr.io
+        // LOGIQUE MQTT (Connexion ESP32)
         const client = mqtt.connect('wss://public:public@public.cloud.shiftr.io', {
-            clientId: 'zap_web_' + Math.random().toString(16).substr(2, 8)
+            clientId: 'zap_web_final'
         });
 
         client.on('connect', () => {
@@ -122,19 +291,15 @@
         });
 
         function lancerImpression() {
-            const couleur = document.querySelector('.pastille.active').getAttribute('title');
-            const puissance = document.getElementById('select-puissance').value;
-            const gravure = document.getElementById('input-gravure').value || "Aucune";
+            const coul = document.querySelector('.pastille.active').getAttribute('data-color');
+            const pui = document.getElementById('puissance').value;
             
-            const message = `LANCER|${couleur}|${puissance}|${gravure}`;
-
-            // Envoi du signal à l'ESP32
-            client.publish('zap3d/commande', 'LANCER'); 
+            // On envoie la commande à l'ESP32
+            client.publish('zap3d/commande', 'LANCER');
             
-            document.getElementById('status').innerText = "Signal envoyé ! 🚀";
-            alert("Commande validée ! L'atelier ZAP lance l'impression de votre batterie " + couleur);
+            alert("Signal envoyé ! L'atelier ZAP 3D lance l'impression de votre modèle " + pui + " en " + coul);
+            document.getElementById('status').innerText = "Commande envoyée ! 🚀";
         }
     </script>
-
 </body>
 </html>
