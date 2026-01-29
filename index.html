@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZAP 3D | Atelier de Vente</title>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <style>
+        :root {
+            --jaune-zap: #FFC400; --noir-fond: #121212; --gris-pro: #1e1e1e; --blanc: #ffffff;
+        }
+        body {
+            background-color: var(--noir-fond);
+            background-image: radial-gradient(circle at 50% 0%, #2a2a2a 0%, #121212 70%);
+            color: var(--blanc); font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; text-align: center;
+        }
+        nav { padding: 20px; border-bottom: 2px solid var(--jaune-zap); background: rgba(0,0,0,0.8); }
+        .hero { padding: 60px 20px; }
+        .hero h1 { font-size: 42px; text-transform: uppercase; color: var(--jaune-zap); margin: 0; }
+        .config-box {
+            background: var(--gris-pro); margin: 20px auto; padding: 40px;
+            max-width: 450px; border-radius: 20px; border-left: 6px solid var(--jaune-zap);
+        }
+        .btn-action {
+            background: var(--jaune-zap); color: black; padding: 18px;
+            font-weight: bold; border: none; cursor: pointer; width: 100%; font-size: 18px;
+            text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-action:hover { background: white; transform: scale(1.02); }
+        #status { margin-top: 20px; font-size: 14px; color: #888; }
+    </style>
+</head>
+<body>
+    <nav><strong>ZAP 3D ONLINE</strong></nav>
+    <div class="hero">
+        <h1>L'énergie sur mesure</h1>
+        <p>Commandez votre batterie 3D depuis n'importe où.</p>
+    </div>
+
+    <div class="config-box">
+        <h3>Votre Configuration</h3>
+        <p>Modèle : ZAP Explorer 20Ah</p>
+        <button class="btn-action" onclick="commander()">Lancer l'impression à distance</button>
+        <div id="status">Statut : Prêt</div>
+    </div>
+
+    <script>
+        // Connexion au broker public (le pont entre Vercel et ton ESP32)
+        const client = mqtt.connect('wss://public:public@public.cloud.shiftr.io', {
+            clientId: 'zap_site_web'
+        });
+
+        client.on('connect', () => {
+            document.getElementById('status').innerText = "Statut : Connecté à l'atelier";
+        });
+
+        function commander() {
+            // On envoie le message "LANCER" sur le canal "zap3d/commande"
+            client.publish('zap3d/commande', 'LANCER');
+            document.getElementById('status').innerText = "Statut : Commande envoyée !";
+            alert("Signal envoyé à l'atelier ZAP !");
+        }
+    </script>
+</body>
+</html>
