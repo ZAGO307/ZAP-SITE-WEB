@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZAP | Batteries Suisses Imprimées en 3D</title>
-    
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
     <style>
@@ -38,13 +37,11 @@
         .hero h1 { font-size: 50px; font-family: 'Arial Black', sans-serif; margin: 20px 0; text-transform: uppercase; }
         .hero p { font-size: 18px; color: var(--gris-texte); max-width: 700px; margin: 0 auto 40px; }
 
-        /* --- SECTION CONCEPT --- */
         .grid-arguments { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; padding: 50px 10%; }
         .arg-card { background: var(--gris-pro); padding: 30px; border-radius: 15px; border-left: 4px solid var(--jaune-zap); transition: 0.3s; }
         .arg-card:hover { transform: translateY(-10px); }
         .arg-icone { font-size: 40px; display: block; margin-bottom: 15px; }
 
-        /* --- CONFIGURATEUR --- */
         .atelier-section { padding: 80px 5%; background: #181818; }
         .configurateur { display: flex; flex-wrap: wrap; justify-content: center; gap: 50px; max-width: 1000px; margin: 0 auto; }
         .preview-3d img { max-width: 400px; width: 100%; border-radius: 20px; box-shadow: 0 0 30px rgba(255, 196, 0, 0.2); }
@@ -82,7 +79,7 @@
     <div class="hero">
         <span class="tag-local">🇨🇭 Fabriqué & Assemblé en Suisse</span>
         <h1>L'énergie <span style="color:#FFC400">sur mesure</span>.</h1>
-        <p>Batteries portables haute performance avec coque imprimée en 3D. <br>Design robuste, réparable et personnalisable à l'infini.</p>
+        <p>Batteries portables haute performance avec coque imprimée en 3D. <br>Le mix parfait entre technologie locale et durabilité.</p>
         <a href="#atelier" class="btn-action" style="width:auto; text-decoration:none;">Créer ma ZAP</a>
     </div>
 
@@ -90,29 +87,29 @@
         <div class="arg-card">
             <span class="arg-icone">🛠️</span>
             <h3>100% Local</h3>
-            <p>Fabrication de la coque par impression 3D et assemblage des composants réalisés localement.</p>
+            <p>De l'impression 3D de la coque à l'assemblage des circuits, tout est fait chez nous en Suisse.</p>
         </div>
         <div class="arg-card">
             <span class="arg-icone">♻️</span>
             <h3>Éco-Conçu</h3>
-            <p>Utilisation de matériaux durables. Pas de gaspillage, nous produisons uniquement ce que vous commandez.</p>
+            <p>Matériaux recyclables et production à la demande pour éviter tout gaspillage inutile.</p>
         </div>
         <div class="arg-card">
             <span class="arg-icone">🛡️</span>
             <h3>Garantie 2 ans</h3>
-            <p>Sérénité totale : nous garantissons nos batteries 2 ans contre toute défaillance constructeur.</p>
+            <p>Une batterie fiable. Nous couvrons tout défaut de fabrication pendant 24 mois.</p>
         </div>
         <div class="arg-card">
             <span class="arg-icone">🔄</span>
-            <h3>Évolutif</h3>
-            <p>Envie de changer de style ? Le changement de coque est possible à tout moment pour donner une seconde vie à votre ZAP.</p>
+            <h3>Coque Interchangeable</h3>
+            <p>Envie de changement ? On imprime une nouvelle coque et on garde l'électronique. Durable et stylé.</p>
         </div>
     </div>
 
     <div class="atelier-section" id="atelier">
         <div style="text-align: center; margin-bottom:40px;">
             <h2 style="font-family:'Arial Black'; text-transform:uppercase;">L'Atelier ZAP</h2>
-            <p>Choisissez votre configuration, nous lançons l'impression.</p>
+            <p>Configure ta batterie et lance la production en direct.</p>
         </div>
 
         <div class="configurateur">
@@ -133,15 +130,15 @@
                     <div class="pastille c-bleu"  data-color="Bleu Bambu"></div>
                 </div>
 
-                <label>2. Modèle de puissance</label>
+                <label>2. Modèle & Puissance</label>
                 <select id="puissance">
-                    <option value="Pocket">ZAP Pocket (10,000 mAh) - 29.00 CHF</option>
-                    <option value="Explorer">ZAP Explorer (20,000 mAh) - 49.00 CHF</option>
+                    <option value="30">ZAP Slim (7,200 mAh) - 30 CHF</option>
+                    <option value="55">ZAP Power (14,400 mAh) - 55 CHF</option>
                 </select>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                    <span style="font-size:20px; font-weight:bold;">Total estimé:</span>
-                    <span id="total-prix" style="font-size:24px; color:#FFC400; font-weight:bold;">29.00 CHF</span>
+                    <span style="font-size:20px; font-weight:bold;">Total :</span>
+                    <span id="total-prix" style="font-size:24px; color:#FFC400; font-weight:bold;">30 CHF</span>
                 </div>
 
                 <button type="button" class="btn-action" onclick="lancerImpression()">
@@ -153,10 +150,11 @@
     </div>
 
     <footer>
-        &copy; 2026 ZAP 3D - Qualité Suisse.
+        &copy; 2026 ZAP 3D - Innovation Suisse.
     </footer>
 
     <script>
+        // Logique des pastilles de couleur
         const pastilles = document.querySelectorAll('.pastille');
         pastilles.forEach(p => {
             p.addEventListener('click', function() {
@@ -165,20 +163,23 @@
             });
         });
 
-        // Mise à jour du prix selon le modèle
+        // Mise à jour dynamique du prix
         document.getElementById('puissance').addEventListener('change', function() {
-            const prix = this.value === "Pocket" ? "29.00 CHF" : "49.00 CHF";
-            document.getElementById('total-prix').innerText = prix;
+            document.getElementById('total-prix').innerText = this.value + " CHF";
         });
 
+        // Connexion MQTT
         const client = mqtt.connect('wss://public:public@public.cloud.shiftr.io', {
-            clientId: 'zap_web_ch'
+            clientId: 'zap_web_ch_v2'
         });
 
         function lancerImpression() {
             const coul = document.querySelector('.pastille.active').getAttribute('data-color');
+            const prix = document.getElementById('puissance').value;
+            const modele = prix === "30" ? "Slim (7.2k)" : "Power (14.4k)";
+            
             client.publish('zap3d/commande', 'LANCER');
-            alert("Signal envoyé à l'atelier ! Fabrication de votre ZAP en " + coul + " lancée.");
+            alert("Signal reçu à l'atelier ! Fabrication de ton modèle " + modele + " en " + coul + " lancée.");
         }
     </script>
 </body>
